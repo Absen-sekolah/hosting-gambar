@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .chat-container {
+            width: 350px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .chat-header {
+            display: flex;
+            align-items: center;
+            background: #007bff;
+            color: white;
+            padding: 8px;
+        }
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .chat-header div {
+            display: flex;
+            flex-direction: column;
+            line-height: 0; /* Mengurangi jarak antar teks */
+        }
+        .chat-box {
+            height: 430px;
+            overflow-y: auto;
+            padding: 10px;
+            background: #f9f9f9;
+        }
+        .message {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 5px 0;
+            max-width: 80%;
+        }
+        .user {
+            background: #007bff;
+            color: white;
+            align-self: flex-end;
+            text-align: right;
+        }
+        .bot {
+            background: #e0e0e0;
+            align-self: flex-start;
+        }
+        .chat-input {
+            display: flex;
+            border-top: 1px solid #ccc;
+            padding: 5px;
+            background: white;
+        }
+        .chat-input input {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            outline: none;
+        }
+        .chat-input button {
+            background: #007bff;
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            cursor: pointer;
+        }
+        .typing-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 5px;
+    padding: 10px;
+    background: #e0e0e0;
+    border-radius: 10px;
+    width: fit-content;
+    margin: 5px 0;
+}
+
+.typing-indicator span {
+    width: 8px;
+    height: 8px;
+    background-color: gray;
+    border-radius: 50%;
+    animation: typingAnimation 1.5s infinite ease-in-out;
+}
+
+.typing-indicator span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-indicator span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes typingAnimation {
+    0% { opacity: 0.3; transform: translateY(0px); }
+    50% { opacity: 1; transform: translateY(-5px); }
+    100% { opacity: 0.3; transform: translateY(0px); }
+}
+
+
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <img src="https://img.freepik.com/premium-vector/cute-robot-waving-hand-cartoon-illustration_138676-2744.jpg?w=740" alt="Avatar" class="avatar">
+            <div>
+                <h3>Neura Chat</h3>
+                <p>dengan Lumin 1.0</p>
+            </div>
+        </div>
+        <div class="chat-box" id="chat-box">
+            <div class="message bot">Hi😁I'm Neura..what can I help with in today?<span class="time"></span></div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="user-input" placeholder="Type message..." onkeypress="handleEnter(event)">
+            <button onclick="sendMessage()">&#9658;</button>
+        </div>
+    </div>
+    <script>
+          function sendMessage() {
+            console.log("sendMessage() dipanggil");
+            const inputField = document.getElementById("user-input");
+            const chatBox = document.getElementById("chat-box");
+            const userMessage = inputField.value.trim();
+            if (userMessage === "") return;
+            
+            const userDiv = document.createElement("div");
+            userDiv.className = "message user";
+            userDiv.innerHTML = userMessage;
+            chatBox.appendChild(userDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            
+            const typingIndicator = document.createElement("div");
+            typingIndicator.className = "message bot typing-indicator";
+            typingIndicator.innerHTML = "<span></span><span></span><span></span>";
+            chatBox.appendChild(typingIndicator);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            
+            setTimeout(() => {
+                chatBox.removeChild(typingIndicator);
+                const botResponse = getBotResponse(userMessage);
+                const botDiv = document.createElement("div");
+                botDiv.className = "message bot";
+                botDiv.innerHTML = botResponse;
+                chatBox.appendChild(botDiv);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 2000);
+            
+            inputField.value = "";
+        }
+
+        function handleEnter(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        }
+
+        function getBotResponse(input) {
+            const responses = {
+    "Hai": "Hi! Saya Neura, asisten virtual berbasis AI. Apa yang bisa saya bantu hari ini?",
+    "mengapa kamu menggunakan teknologi lumin?": " Teknology LUMIN 1.0 adalah teknologi yang dirancang oleh tim di Ruangbimbel indonesia untuk saya dapat membantu memahami konteks dan maksud dari percakapan manusia dengan lebih baik. Dengan menggunakan teknik ini, saya dapat belajar dari interaksi, memahami pola komunikasi, dan memberikan respon yang relevan, seolah-olah sedang berbicara secara alami dengan manusia.",
+    "apa itu fotosintesis?": "Fotosintesis adalah proses tumbuhan mengubah cahaya matahari menjadi energi.",
+    "hai mito aku dafa": "Hai dafa..aku mito si robot pemecah konsultasi masalahmu",
+    "berikan jawaban yang lebih luas": "Fotosintesis adalah proses biologis yang terjadi pada tumbuhan, alga, dan beberapa jenis bakteri, di mana energi dari cahaya matahari diubah menjadi energi kimia dalam bentuk glukosa atau senyawa organik lain. Proses ini merupakan dasar kehidupan di bumi karena menghasilkan oksigen dan menjadi sumber energi utama bagi hampir semua makhluk hidup.",
+    "hai mito aku ulil": "Hai ulil..aku mito si robot pemecah konsultasi masalahmu",
+    "bagaimana proses kamu diciptakan?": "Saya adalah model kecerdasan buatan yang dikembangkan oleh Ruangbimbel.com, sebuah perusahaan yang berfokus pada pengembangan teknologi aplikasi belajar online. Proses penciptaan saya melibatkan pelatihan pada sejumlah besar data teks menggunakan teknik learning understanding mind interface navigation",
+    "siapa founder dan ceo ruangbimbel?": "saat ini..Founder dan CEO ruangbimbel adalah Imam nurainun masyhur.Ruangbimbel adalah platform edtech terbesar di Indonesia yang menyediakan layanan belajar daring untuk siswa, bimbingan belajar, serta pelatihan keterampilan. 🚀 ",
+    "hai mito aku danial fanzeka": "Hai danial..aku mito si robot pemecah konsultasi masalahmu",
+    "apa itu gravitasi?": "Gravitasi adalah gaya tarik-menarik antara benda bermassa, yang membuat kita tetap di permukaan bumi.",
+    "berapa suhu titik beku air?": "Suhu titik beku air adalah 0°C atau 32°F.",
+    "kenapa langit berwarna biru?": "Karena cahaya matahari tersebar oleh molekul udara di atmosfer.",
+    "apa itu atom?": "Atom adalah partikel terkecil dari suatu unsur yang masih memiliki sifat unsur tersebut.",
+    "apa sinonim dari 'besar'?": "Sinonim dari 'besar' adalah 'luas', 'lebar', atau 'raksasa'.",
+    "apa antonim dari 'panjang'?": "Antonim dari 'panjang' adalah 'pendek'.",
+    "apa itu kata benda?": "Kata benda adalah kata yang menunjukkan nama orang, tempat, atau benda.",
+    "contoh kalimat dengan kata kerja?": "Saya sedang belajar di rumah.",
+    "apa itu majas hiperbola?": "Majas hiperbola adalah majas yang melebih-lebihkan sesuatu, misalnya 'Aku sudah menunggu seribu tahun!'.",
+    "apa itu kecerdasan buatan?": "Kecerdasan buatan (AI) adalah teknologi yang memungkinkan komputer berpikir dan belajar seperti manusia.",
+    "apa itu internet?": "Internet adalah jaringan global yang menghubungkan komputer dan memungkinkan komunikasi serta berbagi informasi.",
+    "siapa yang menciptakan komputer?": "Charles Babbage dianggap sebagai bapak komputer karena menciptakan mesin analitik pada abad ke-19.",
+    "siapa yang menciptakan kamu?": "Saya diciptakan oleh Pengembang Ruangbimbel, sebuah perusahaan yang fokus pada perusahan teknology khususnya pada aplikasi belajar online. Tim di Ruangbimbel indonesia merancang saya untuk membantu sobat pengguna ruangbimbel dalam konsultasi, sobat menyebut Generative  Transformer Artificial Intelligence ). Sumber daya dan pengetahuan saya diperoleh dari Update program terbaru, tetapi saya    hanya program komputer yang dirancang untuk memproses dan menghasilkan teks.",
+    "siapa orang yang menciptakan kamu?": "Saya diciptakan oleh Imam masyhur..seorang Pengembang Ruangbimbel, sebuah perusahaan yang fokus pada perusahan teknology khususnya pada aplikasi belajar online. Tim di Ruangbimbel indonesia merancang saya untuk membantu sobat pengguna ruangbimbel dalam konsultasi, sobat menyebut Generative  Transformer Artificial Intelligence ). Sumber daya dan pengetahuan saya diperoleh dari Update program terbaru, tetapi saya    hanya program komputer yang dirancang untuk memproses dan menghasilkan teks.",
+    "apa perbedaan RAM dan ROM?": "RAM adalah memori sementara yang digunakan saat komputer berjalan, sedangkan ROM adalah memori permanen yang menyimpan firmware.",
+    "kapan Indonesia merdeka?": "Indonesia merdeka pada tanggal 17 Agustus 1945.",
+    "siapa presiden pertama Indonesia?": "Presiden pertama Indonesia adalah Ir. Soekarno.",
+    "kenapa ayam menyeberang jalan?": "ya untuk sampai ke sisi yang lain lahhh",
+    "apa yang lebih besar dari alam semesta?": "Tagihan listrik bulan lalu wkwkwk",
+    "kenapa komputer tidak bisa lari?": "Karena dia hanya bisa 'crash' atau 'freeze'",
+    "apa hewan yang paling hemat?": "saya tidak tahu😁",
+    "kenapa matematika menyedihkan?": "Karena punya banyak masalah wkwkwk",
+    "apa itu sumpah pemuda?": "Sumpah Pemuda adalah ikrar pemuda Indonesia pada 28 Oktober 1928 untuk bersatu dalam satu bangsa, bahasa, dan tanah air.",
+    "kapan perang dunia kedua berakhir?": "Perang Dunia II berakhir pada tahun 1945.",
+    "apa penyebab perang dunia pertama?": "Perang Dunia Pertama (PD I), yang berlangsung antara 1914 hingga 1918, disebabkan oleh kombinasi faktor politik, ekonomi, sosial, dan militer yang saling berinteraksi. Beberapa penyebab utama perang tersebut antara lain: 1.Aliansi Militer: Negara-negara besar Eropa membentuk aliansi untuk saling melindungi, tetapi ini juga menciptakan ketegangan. Dua aliansi besar terbentuk: Sekutu (termasuk Prancis, Rusia, dan Inggris) dan Blok Sentral (termasuk Jerman, Austria-Hungaria, dan Italia). Ketika satu negara terlibat dalam konflik, negara-negara sekutunya ikut terlibat, memperburuk situasi. 2.Nasionalisme: Nasionalisme yang kuat di Eropa menciptakan ketegangan, terutama di wilayah-wilayah yang multietnis, seperti di Balkan. Negara-negara yang lebih kecil seperti Serbia ingin merdeka dari kekaisaran besar, dan ini menyebabkan konflik dengan negara-negara besar yang berusaha mempertahankan kekuasaan mereka.",
+            };
+            return responses[input.toLowerCase()] || "Maaf, saya tidak mengerti. Bisa kamu ulangi?";
+        }
+    
+        
+    </script>
+</body>
+</html>
